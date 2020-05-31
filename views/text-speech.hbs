@@ -1,0 +1,60 @@
+<div class="container mt-3">
+  <form>
+    <div class="form-group">
+      <label for="text" class="font-weight-bold">
+        Văn bản
+      </label>
+      <textarea class="form-control" id="text" rows="5"></textarea>
+    </div>
+    <p class="font-weight-bold mt-3">
+      Giọng đọc
+    </p>
+    <div class="form-check">
+      <input id="leminh" class="form-check-input" type="radio" name="voice" value="true" />
+      <label for="leminh" class="form-check-label">
+        Lê Minh (Nam miền Bắc)
+      </label>
+    </div>
+    <div class="form-check">
+      <input id="banmai" class="form-check-input" type="radio" name="voice" value="true" />
+      <label for="banmai" class="form-check-label">
+        Ban Mai (Nữ miền Bắc)
+      </label>
+    </div>
+    <div class="form-check">
+      <input id="thuminh" class="form-check-input" type="radio" name="voice" value="true" />
+      <label for="thuminh" class="form-check-label">
+        Thu Minh (Nữ miền Bắc)
+      </label>
+    </div>
+    <div class="form-check">
+      <input id="giahuy" class="form-check-input" type="radio" name="voice" value="true" />
+      <label for="giahuy" class="form-check-label">
+        Gia Huy (Nam miền Trung)
+      </label>
+    </div>
+    <div class="form-check">
+      <input id="myan" class="form-check-input" type="radio" name="voice" value="true" />
+      <label for="myan" class="form-check-label">
+        Mỹ An (Nữ miền Trung)
+      </label>
+    </div>
+    <div class="form-check">
+      <input id="lannhi" class="form-check-input" type="radio" name="voice" value="true" />
+      <label for="lannhi" class="form-check-label">
+        Lan Nhi (Nữ miền Nam)
+      </label>
+    </div>
+    <button type="submit" id="post-form" class="btn btn-primary mt-3">
+      <img src="../public/speak.svg" height="20px" width="20px" style="margin-right: 5px;"> Đọc văn bản
+    </button>
+  </form>
+  <div class="audio"></div>
+</div>
+<!-- JS, Popper.js, and jQuery -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script src="../public/text-speech.js">
+
+</script>
