@@ -1,5 +1,5 @@
 // Record
-var recorder, gumStream, url;
+var recorder, gumStream, _url, _blob;
 var recordButton = document.getElementById("recordButton");
 recordButton.addEventListener("click", toggleRecording);
 
@@ -16,11 +16,13 @@ function toggleRecording() {
         gumStream = stream;
         recorder = new MediaRecorder(stream);
         recorder.ondataavailable = function (e) {
-          url = URL.createObjectURL(e.data);
+          _url = URL.createObjectURL(e.data);
           var preview = document.createElement("audio");
           preview.controls = true;
-          preview.src = url;
+          preview.src = _url;
+          document.getElementById("audio-play").innerHTML = "";
           document.getElementById("audio-play").appendChild(preview);
+          _blob = e.data;
         };
         recorder.start();
       });
@@ -29,21 +31,38 @@ function toggleRecording() {
 
 var submitVoice = document.getElementById("submitVoice");
 submitVoice.addEventListener("click", postAudioPath);
+var html;
+var text_result = document.getElementById("text_result");
 
-function postAudioPath() {
+async function postAudioPath() {
+  const buffer = JSON.stringify(
+    Array.from(new Uint8Array(await _blob.arrayBuffer()))
+  );
+
   var setting = {
     method: "POST",
     url: "/speech-to-text",
     dataType: "json",
     async: false,
     data: {
-      url: url,
+      // url: _url,
+      buffer: buffer,
     },
   };
 
-  $.ajax(setting).done(function (params) {
-      console.log(params)
-  }).fail(function (err) {
-      console.log(err)
-  });
+  // if (setting.data) {
+  $.ajax(setting)
+    .done(function (params) {
+      const { hypotheses } = params;
+      html = hypotheses[0].utterance;
+      console.log(params);
+    })
+    .fail(function (err) {
+      html = err.message;
+      console.log(err);
+    });
+  // }
+
+  console.log(html);
+  text_result.innerHTML = html;
 }

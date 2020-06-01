@@ -4,13 +4,15 @@ const axios = require("axios");
 const exphbs = require("express-handlebars");
 var bodyParser = require("body-parser");
 const fs = require("fs");
+var FormData = require("form-data");
+var request = require("request");
+const { Readable } = require("stream");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-
+app.use(bodyParser.json({ limit: "10mb", extended: true }));
+app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 app.engine(
   "hbs",
   exphbs({
@@ -53,18 +55,40 @@ app.post("/", (req, res) => {
     });
 });
 
-app.post("/speech-to-text", (req, res) => {
-  const { url } = req.body;
-  console.log(url);
+app.post("/speech-to-text", async (req, res) => {
+  const { buffer } = req.body;
+  const _buffer = Buffer.from(new Uint8Array(JSON.parse(buffer)).buffer);
 
-  fs.readFile(url, (err, data) => {
-    if (err) throw err;
-    fs.writeFile("public/output", data, "utf8", (req, res) => {
-      if (err) throw err;
-      console.log("Done");
+  console.log(typeof _buffer);
+
+  fs.writeFile("public/output", _buffer, "utf-8", () =>
+    console.log("File created!")
+  );
+  const data = fs.createReadStream("public/output");
+  console.log(`data ${data}`);
+  if (data) {
+    var options = {
+      method: "POST",
+      url: "https://api.fpt.ai/hmi/asr/general",
+      headers: {
+        api_key: "D1RO9qGql9wiOObgj7r39FqKfP1RP43e",
+        "Content-Type": "application/octet-stream",
+      },
+      body: data,
+    };
+
+    request(options, function (error, response) {
+      if (error) {
+        res.status(400).send(error);
+        throw new error;
+      }
+
+      console.log(response.body);
+      res.status(200).send(response.body);
     });
-  });  
+  }
 });
+
 app.use((req, res, next) => {
   res.status(404).send("NOT FOUND");
 });
